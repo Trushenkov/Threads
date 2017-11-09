@@ -7,9 +7,7 @@ package ru.tds.catchingthreads;
  */
 public class Demo {
     public static void main(String[] args) {
-        FirstThread thread = new FirstThread();
-        thread.start();
-        SecondThread thread2 = new SecondThread();
-        thread2.start();
+        new FirstThread().start();
+        new SecondThread().start();
     }
 }
