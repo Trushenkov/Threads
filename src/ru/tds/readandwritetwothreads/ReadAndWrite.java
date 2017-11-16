@@ -16,7 +16,7 @@ public class ReadAndWrite extends Thread {
     }
 
     public void run() {
-        long time_one = System.currentTimeMillis();
+        long firstly_time = System.currentTimeMillis();
         String string;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(way))) {
             while ((string = bufferedReader.readLine()) != null) {
@@ -25,7 +25,7 @@ public class ReadAndWrite extends Thread {
         } catch (IOException e) {
 
         }
-        System.out.println((System.currentTimeMillis() - time_one) % 1000);
+        System.out.println((System.currentTimeMillis() - firstly_time) % 1000);
     }
 
     /**
