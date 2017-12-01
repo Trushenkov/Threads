@@ -5,9 +5,9 @@ package ru.tds.copyfiles;
  */
 public class Main {
 
-    public static final String ADDRESS_READER = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\istochnik.txt";
-    public static final String ADDRESS_WRITER = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\result.txt";
-    public static final String ADDRESS_WRITER_2 = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\result2.txt";
+    private static final String ADDRESS_READER = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\istochnik.txt";
+    private static final String ADDRESS_WRITER = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\result.txt";
+    private static final String ADDRESS_WRITER_2 = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\result2.txt";
 
     public static void main(String[] args) throws InterruptedException {
         long beforeStartProgramm = System.currentTimeMillis();
