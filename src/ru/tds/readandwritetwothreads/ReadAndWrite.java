@@ -11,21 +11,22 @@ public class ReadAndWrite extends Thread {
     private String way;
     private static volatile BufferedWriter bufferedWriter;
 
-    public ReadAndWrite(String way) {
+    public ReadAndWrite(final String way) {
         this.way = way;
     }
 
     public void run() {
-        long firstly_time = System.currentTimeMillis();
+        long before = System.currentTimeMillis();
         String string;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(way))) {
             while ((string = bufferedReader.readLine()) != null) {
                 writeString(string);
+                yield();
             }
         } catch (IOException e) {
-
         }
-        System.out.println((System.currentTimeMillis() - firstly_time) % 1000);
+        long after = System.currentTimeMillis();
+        System.out.println((after - before) % 1000);
     }
 
     /**
@@ -39,20 +40,20 @@ public class ReadAndWrite extends Thread {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        bufferedWriter = new BufferedWriter(new FileWriter("src\\ru\\tds\\readandwritetwothreads\\Результат.txt"));
+        bufferedWriter = new BufferedWriter(new FileWriter("src\\ru\\tds\\readandwritetwothreads\\Результат.txt", false));
 
         ReadAndWrite thread1 = new ReadAndWrite("src\\ru\\tds\\readandwritetwothreads\\1 файл.txt");
         ReadAndWrite thread2 = new ReadAndWrite("src\\ru\\tds\\readandwritetwothreads\\2 файл.txt");
 
         thread1.start();
         thread2.start();
-
         if (thread1.isAlive()) {
             thread1.join();
         }
         if (thread2.isAlive()) {
             thread2.join();
         }
+
         bufferedWriter.close();
     }
 }
