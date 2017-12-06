@@ -10,15 +10,20 @@ import java.io.*;
 public class CopyFiles extends Thread {
     private String source;
     private String result;
+    private long time;
 
     CopyFiles(String source, String result) {
         this.source = source;
         this.result = result;
     }
 
+    long getTime() {
+        return time;
+    }
+
     public void run() {
         String string;
-        long before = System.currentTimeMillis();
+        long beforeStart = System.currentTimeMillis();
         try (BufferedReader reader = new BufferedReader(new FileReader(source));
              BufferedWriter writer = new BufferedWriter(new FileWriter(result))) {
             while ((string = reader.readLine()) != null) {
@@ -27,7 +32,7 @@ public class CopyFiles extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        long after = System.currentTimeMillis();
-        System.out.println("Время выполнения "  + getName() + " потока : " + (after - before));
+        time = System.currentTimeMillis() - beforeStart;
+        System.out.println("Время выполнения "  + getName() + " потока = " + time + " мс.");
     }
 }
