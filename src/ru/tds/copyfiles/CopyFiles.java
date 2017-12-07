@@ -21,18 +21,21 @@ public class CopyFiles extends Thread {
         return time;
     }
 
+    @Override
     public void run() {
-        String string;
         long beforeStart = System.currentTimeMillis();
         try (BufferedReader reader = new BufferedReader(new FileReader(source));
              BufferedWriter writer = new BufferedWriter(new FileWriter(result))) {
+
+            String string;
             while ((string = reader.readLine()) != null) {
-                writer.write(string + "\n");
+                writer.write(string);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         time = System.currentTimeMillis() - beforeStart;
-        System.out.println("Время выполнения "  + getName() + " потока = " + time + " мс.");
+        System.out.println("Время выполнения " + getName() + " потока = " + time);
     }
 }
