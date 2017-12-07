@@ -1,60 +1,87 @@
 package ru.tds.copyfiles;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * Класс, демонстрирующий работоспособнось класса CopyFiles.
  */
 public class Main {
 
-    private static final String ADDRESS_READER = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\istochnik.txt";
-    private static final String ADDRESS_WRITER = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\result.txt";
-    private static final String ADDRESS_WRITER_2 = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\result2.txt";
+    private static final String READER = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\istochnik.txt";
+    private static final String WRITER = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\result.txt";
+    private static final String WRITER_2 = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\result2.txt";
 
     public static void main(String[] args) throws InterruptedException {
 
-        CopyFiles file1 = new CopyFiles(ADDRESS_READER, ADDRESS_WRITER);
-        CopyFiles file2 = new CopyFiles(ADDRESS_READER, ADDRESS_WRITER_2);
+        CopyFiles thread1 = new CopyFiles(READER, WRITER);
+        CopyFiles thread2 = new CopyFiles(READER, WRITER_2);
         System.out.println("Параллельное копирование двух файлов : \n " );
-        startTwoThreads(file1, file2);
-        joinForTwoThreads(file1, file2);
-        long timeOfFirst = file1.getTime() + file2.getTime();
-        System.out.println("Время выполнения копирования двух файлов = " + timeOfFirst + " мс.");
-        System.out.println("");
-        file1 = new CopyFiles(ADDRESS_READER, ADDRESS_WRITER);
-        file2 = new CopyFiles(ADDRESS_READER, ADDRESS_WRITER_2);
+        startThreads(thread1, thread2);
+        joinTwoThreads(thread1, thread2);
+        long firstTime = thread1.getTime() + thread2.getTime();
+        System.out.println("Время выполнения копирования двух файлов = " + firstTime + " мс. \n");
+
+        thread1 = new CopyFiles(READER, WRITER);
+        thread2 = new CopyFiles(READER, WRITER_2);
         System.out.println("Последовательное копирование двух файлов : \n " );
-        startOneThread(file1);
-        joinForOneThread(file1);
-        System.out.println("Время выполнения копирования первого файла = " + file1.getTime() + " мс.");
+        startThread(thread1);
+        joinOneThread(thread1);
+        System.out.println("Время выполнения копирования первого файла = " + thread1.getTime() + " мс.");
 
-        startOneThread(file2);
-        joinForOneThread(file2);
-        System.out.println("Время выполнения копирования второго файла = " + file2.getTime() + " мс.");
-        long timeOfSecond = file1.getTime() + file2.getTime();
+        startThread(thread2);
+        joinOneThread(thread2);
+        System.out.println("Время выполнения копирования второго файла = " + thread2.getTime() + " мс.");
+        AtomicLong secondTime = new AtomicLong(thread1.getTime() + thread2.getTime());
 
-        System.out.println("Общее прошедшее время : " + (timeOfFirst + timeOfSecond) + " мс.");
+        System.out.println("Общее прошедшее время : " + (firstTime + secondTime.get()) + " мс.");
     }
 
-    private static void startOneThread(CopyFiles file) throws InterruptedException {
-        file.start();
+    /**
+     * Метод для старта одного потока, посылаемого в параметры метода
+     *
+     * @param thread поток
+     * @throws InterruptedException исключение
+     */
+    private static void startThread(CopyFiles thread) throws InterruptedException {
+        thread.start();
     }
 
-    private static void startTwoThreads(CopyFiles file1, CopyFiles file2) throws InterruptedException {
-        file1.start();
-        file2.start();
+    /**
+     * Метод для старта двух потоков, посылаемых в параметры метода
+     * @param thread1 первый поток
+     * @param thread2 второй поток
+     * @throws InterruptedException исключение
+     */
+    private static void startThreads(CopyFiles thread1, CopyFiles thread2) throws InterruptedException {
+        thread1.start();
+        thread2.start();
     }
 
-    private static void joinForTwoThreads(CopyFiles file1, CopyFiles file2) throws InterruptedException {
-        if (file1.isAlive()) {
-            file1.join();
+    /**
+     * Метод для ожидания завершения потока, пока он работает.
+     *
+     * @param thread1 перывый поток
+     * @param thread2 второй поток
+     * @throws InterruptedException исключение
+     */
+    private static void joinTwoThreads(CopyFiles thread1, CopyFiles thread2) throws InterruptedException {
+        if (thread1.isAlive()) {
+            thread1.join();
         }
-        if (file2.isAlive()) {
-            file2.join();
+        if (thread2.isAlive()) {
+            thread2.join();
         }
     }
 
-    private static void joinForOneThread(CopyFiles file) throws InterruptedException {
-        if (file.isAlive()) {
-            file.join();
+    /**
+     * Метод для ожидания завершения потока, пока он работает.
+     *
+     * @param thread поток
+     * @throws InterruptedException исключение
+     */
+    private static void joinOneThread(CopyFiles thread) throws InterruptedException {
+        if (thread.isAlive()) {
+            thread.join();
         }
     }
 }
