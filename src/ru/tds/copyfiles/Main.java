@@ -1,70 +1,68 @@
 package ru.tds.copyfiles;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 /**
  * Класс, демонстрирующий работоспособнось класса CopyFiles.
  */
 public class Main {
 
-    private static final String READER = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\istochnik.txt";
-    private static final String WRITER = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\result.txt";
-    private static final String WRITER_2 = "C:\\Users\\dmitry\\IdeaProjects\\Threads\\src\\ru\\tds\\copyfiles\\result2.txt";
+    private static final String READER = "src\\ru\\tds\\copyfiles\\source.txt";
+    private static final String WRITER = "src\\ru\\tds\\copyfiles\\result.txt";
+    private static final String WRITER_2 = "src\\ru\\tds\\copyfiles\\result2.txt";
 
     public static void main(String[] args) throws InterruptedException {
 
         CopyFiles thread1 = new CopyFiles(READER, WRITER);
         CopyFiles thread2 = new CopyFiles(READER, WRITER_2);
-        System.out.println("Параллельное копирование двух файлов : \n " );
+        System.out.println("Параллельное копирование двух файлов :\n");
         startThreads(thread1, thread2);
-        joinTwoThreads(thread1, thread2);
+        joinThreads(thread1, thread2);
         long firstTime = thread1.getTime() + thread2.getTime();
-        System.out.println("Время выполнения копирования двух файлов = " + firstTime + " мс. \n");
+        System.out.println("Время выполнения копирования двух файлов = " + firstTime + "\n");
 
         thread1 = new CopyFiles(READER, WRITER);
         thread2 = new CopyFiles(READER, WRITER_2);
-        System.out.println("Последовательное копирование двух файлов : \n " );
+        System.out.println("Последовательное копирование двух файлов :\n");
         startThread(thread1);
-        joinOneThread(thread1);
-        System.out.println("Время выполнения копирования первого файла = " + thread1.getTime() + " мс.");
+        joinThread(thread1);
+        System.out.println("Время выполнения копирования первого файла = " + thread1.getTime());
 
         startThread(thread2);
-        joinOneThread(thread2);
-        System.out.println("Время выполнения копирования второго файла = " + thread2.getTime() + " мс.");
-        AtomicLong secondTime = new AtomicLong(thread1.getTime() + thread2.getTime());
+        joinThread(thread2);
+        System.out.println("Время выполнения копирования второго файла = " + thread2.getTime());
+        long secondTime = thread1.getTime() + thread2.getTime();
 
-        System.out.println("Общее прошедшее время : " + (firstTime + secondTime.get()) + " мс.");
+        System.out.println("Общее прошедшее время : " + (firstTime + secondTime));
     }
 
     /**
-     * Метод для старта одного потока, посылаемого в параметры метода
+     * Метод для запуска одного потока.
      *
      * @param thread поток
-     * @throws InterruptedException исключение
      */
-    private static void startThread(CopyFiles thread) throws InterruptedException {
+    private static void startThread(CopyFiles thread) {
         thread.start();
     }
 
     /**
-     * Метод для старта двух потоков, посылаемых в параметры метода
+     * Метод для запуска двух потоков.
+     *
      * @param thread1 первый поток
      * @param thread2 второй поток
-     * @throws InterruptedException исключение
+
      */
-    private static void startThreads(CopyFiles thread1, CopyFiles thread2) throws InterruptedException {
+    private static void startThreads(CopyFiles thread1, CopyFiles thread2) {
         thread1.start();
         thread2.start();
     }
 
     /**
-     * Метод для ожидания завершения потока, пока он работает.
+     * Метод, который ждет пока завершат выполнение два потока.
      *
      * @param thread1 перывый поток
      * @param thread2 второй поток
      * @throws InterruptedException исключение
      */
-    private static void joinTwoThreads(CopyFiles thread1, CopyFiles thread2) throws InterruptedException {
+    private static void joinThreads(CopyFiles thread1, CopyFiles thread2) throws InterruptedException {
         if (thread1.isAlive()) {
             thread1.join();
         }
@@ -74,14 +72,15 @@ public class Main {
     }
 
     /**
-     * Метод для ожидания завершения потока, пока он работает.
+     * Метод, который ждет пока завершит выполнение один поток.
      *
      * @param thread поток
      * @throws InterruptedException исключение
      */
-    private static void joinOneThread(CopyFiles thread) throws InterruptedException {
+    private static void joinThread(CopyFiles thread) throws InterruptedException {
         if (thread.isAlive()) {
             thread.join();
         }
     }
 }
+
