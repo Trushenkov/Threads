@@ -13,22 +13,20 @@ public class Main {
 
         CopyFiles thread1 = new CopyFiles(READER, WRITER);
         CopyFiles thread2 = new CopyFiles(READER, WRITER_2);
-        System.out.println("Параллельное копирование двух файлов :\n");
         startThreads(thread1, thread2);
         joinThreads(thread1, thread2);
         long firstTime = thread1.getTime() + thread2.getTime();
-        System.out.println("Время выполнения копирования двух файлов = " + firstTime + "\n");
-
+        System.out.println("Время выполнения параллельного копирования двух файлов = " + firstTime);
         thread1 = new CopyFiles(READER, WRITER);
         thread2 = new CopyFiles(READER, WRITER_2);
-        System.out.println("Последовательное копирование двух файлов :\n");
+        System.out.println("Время выполнения последовательного копирования двух файлов :");
         startThread(thread1);
         joinThread(thread1);
-        System.out.println("Время выполнения копирования первого файла = " + thread1.getTime());
+        System.out.println("Копирование первого файла = " + thread1.getTime());
 
         startThread(thread2);
         joinThread(thread2);
-        System.out.println("Время выполнения копирования второго файла = " + thread2.getTime());
+        System.out.println("Копирование второго файла = " + thread2.getTime());
         long secondTime = thread1.getTime() + thread2.getTime();
 
         System.out.println("Общее прошедшее время : " + (firstTime + secondTime));
