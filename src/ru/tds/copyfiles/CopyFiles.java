@@ -36,6 +36,5 @@ public class CopyFiles extends Thread {
             e.printStackTrace();
         }
         time = System.currentTimeMillis() - beforeStart;
-        System.out.println("Время выполнения " + getName() + " потока = " + time);
     }
 }
