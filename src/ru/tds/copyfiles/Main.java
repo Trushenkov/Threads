@@ -10,6 +10,7 @@ public class Main {
     private static final String WRITER_2 = "src\\ru\\tds\\copyfiles\\result2.txt";
 
     public static void main(String[] args) throws InterruptedException {
+
         CopyFiles thread1 = new CopyFiles(READER, WRITER);
         firstStep(thread1);
         long firstStepTime = thread1.getTime();
