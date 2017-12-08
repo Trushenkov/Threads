@@ -5,16 +5,16 @@ package ru.tds.catchingthreads;
  *
  * @author Trushenkov Dmitry 15ИТ18
  */
-public class Threads extends Thread {
+public class CatchingThread extends Thread {
 
     private int firstPriority;
     private int secondPriority;
 
     private static final int COUNT_OF_STEPS = 2000;
     private static final int TIME_OF_DELAY = 5;
-    private static final int STEPS_FOR_FIRST = 500;
+    private static final int STEPS_FOR_CHANGE_PRIORITY = 500;
 
-    Threads(int firstPriority, int secondPriority) {
+    CatchingThread(int firstPriority, int secondPriority) {
         this.firstPriority = firstPriority;
         this.secondPriority = secondPriority;
     }
@@ -28,7 +28,7 @@ public class Threads extends Thread {
                 e.printStackTrace();
             }
             System.out.println(this.getName() +" шаг "+ i );
-            if (i == STEPS_FOR_FIRST) {
+            if (i == STEPS_FOR_CHANGE_PRIORITY) {
                 setPriority(secondPriority);
             }
         }
