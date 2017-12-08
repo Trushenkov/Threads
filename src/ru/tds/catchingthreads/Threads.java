@@ -1,7 +1,7 @@
 package ru.tds.catchingthreads;
 
 /**
- * Класс, в котором выполяняется первый поток и меняется его приоритет.
+ * Класс для создания и выполнения потоков.
  *
  * @author Trushenkov Dmitry 15ИТ18
  */
@@ -25,6 +25,7 @@ public class Threads extends Thread {
             try {
                sleep(TIME_OF_DELAY);
             } catch (InterruptedException e) {
+                e.printStackTrace();
             }
             System.out.println(this.getName() +" шаг "+ i );
             if (i == STEPS_FOR_FIRST) {
