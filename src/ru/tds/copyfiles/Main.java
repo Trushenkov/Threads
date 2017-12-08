@@ -10,57 +10,49 @@ public class Main {
     private static final String WRITER_2 = "src\\ru\\tds\\copyfiles\\result2.txt";
 
     public static void main(String[] args) throws InterruptedException {
-
         CopyFiles thread1 = new CopyFiles(READER, WRITER);
+        firstStep(thread1);
+        long firstStepTime = thread1.getTime();
+        System.out.println("1 ЭТАП.\nВремя выполнения копирования файла = " + firstStepTime);
+
+        thread1 = new CopyFiles(READER, WRITER);
         CopyFiles thread2 = new CopyFiles(READER, WRITER_2);
-        startThreads(thread1, thread2);
-        joinThreads(thread1, thread2);
-        long firstTime = thread1.getTime() + thread2.getTime();
-        System.out.println("Время выполнения параллельного копирования двух файлов = " + firstTime);
+        secondStep(thread1, thread2);
+        long secondStepTime = thread1.getTime() + thread2.getTime();
+        System.out.println("2 ЭТАП.\nВремя выполнения параллельного копирования двух файлов = " + secondStepTime);
+
         thread1 = new CopyFiles(READER, WRITER);
         thread2 = new CopyFiles(READER, WRITER_2);
-        System.out.println("Время выполнения последовательного копирования двух файлов :");
-        startThread(thread1);
-        joinThread(thread1);
-        System.out.println("Копирование первого файла = " + thread1.getTime());
+        thirdStep(thread1, thread2);
+        long thirdStepTime = thread1.getTime() + thread2.getTime();
+        System.out.println("3 ЭТАП.\nВремя выполнения последовательного копирования двух файлов = " + (thread1.getTime() + thread2.getTime()));
 
-        startThread(thread2);
-        joinThread(thread2);
-        System.out.println("Копирование второго файла = " + thread2.getTime());
-        long secondTime = thread1.getTime() + thread2.getTime();
-
-        System.out.println("Общее прошедшее время : " + (firstTime + secondTime));
+        System.out.println("Общее прошедшее время : " + (firstStepTime + secondStepTime + thirdStepTime));
     }
 
     /**
-     * Метод для запуска одного потока.
+     * Метод для запуска потока и ожидания, пока он завершится.
      *
-     * @param thread поток
-     */
-    private static void startThread(CopyFiles thread) {
-        thread.start();
-    }
-
-    /**
-     * Метод для запуска двух потоков.
-     *
-     * @param thread1 первый поток
-     * @param thread2 второй поток
-
-     */
-    private static void startThreads(CopyFiles thread1, CopyFiles thread2) {
-        thread1.start();
-        thread2.start();
-    }
-
-    /**
-     * Метод, который ждет пока завершат выполнение два потока.
-     *
-     * @param thread1 перывый поток
-     * @param thread2 второй поток
+     * @param thread1 поток
      * @throws InterruptedException исключение
      */
-    private static void joinThreads(CopyFiles thread1, CopyFiles thread2) throws InterruptedException {
+    private static void firstStep(CopyFiles thread1) throws InterruptedException {
+        thread1.start();
+        if (thread1.isAlive()) {
+            thread1.join();
+        }
+    }
+
+    /**
+     * Метод для параллельного запуска двух потоков и ожидания, пока они завершатся.
+     *
+     * @param thread1 поток
+     * @param thread2 поток
+     * @throws InterruptedException исключение
+     */
+    private static void secondStep(CopyFiles thread1, CopyFiles thread2) throws InterruptedException {
+        thread1.start();
+        thread2.start();
         if (thread1.isAlive()) {
             thread1.join();
         }
@@ -70,14 +62,20 @@ public class Main {
     }
 
     /**
-     * Метод, который ждет пока завершит выполнение один поток.
+     * Метод для последовательного запуска двух потоков и ожидания, пока они завершатся.
      *
-     * @param thread поток
+     * @param thread1 поток
+     * @param thread2 поток
      * @throws InterruptedException исключение
      */
-    private static void joinThread(CopyFiles thread) throws InterruptedException {
-        if (thread.isAlive()) {
-            thread.join();
+    private static void thirdStep(CopyFiles thread1, CopyFiles thread2) throws InterruptedException {
+        thread1.start();
+        if (thread1.isAlive()) {
+            thread1.join();
+        }
+        thread2.start();
+        if (thread2.isAlive()) {
+            thread2.join();
         }
     }
 }
