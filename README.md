@@ -22,4 +22,3 @@
 1. Формирование файла, содержащего готовые ссылки для скачивания песен, в соответствии с шаблон регулярного выражения.
 2. Скачивание музыки с сайта https://zvonko.me/, используя файл outFile.txt с готовыми ссылками на скачивание.<br>
 <a href="https://github.com/Trushenkov/Threads/tree/master/src/ru/tds/downloadmusic"> Качаем музыку </a>
-<img href="http://pixs.ru/showimage/SnimokPNG_2271439_28661224.png">
