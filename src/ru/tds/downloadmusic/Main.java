@@ -1,28 +1,25 @@
 package ru.tds.downloadmusic;
 
 import java.io.*;
-import java.net.*;
-import java.nio.channels.*;
-import java.util.regex.*;
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * Класс, в котором реализвано скачивание музыки.
+ * Класс, в котором реализвано выполнение задачи "Качаем музыку".
  *
- * @author Trushenkov Dmitry 15ИТ18
+ * @author Трушенков Дмитрий 15ИТ18
  */
 public class Main {
 
     private static final String LINK_SITE_TXT = "src\\ru\\tds\\downloadmusic\\inFile.txt";
-    private static final String DOWNLOAD_LINK_TXT = "src\\ru\\tds\\downloadmusic\\outFile.txt";
-    private static final String PATH_TO_MUSIC = "src\\ru\\tds\\downloadmusic\\music\\music";
+    private static final String OUTPUT_FILE_TXT = "src\\ru\\tds\\downloadmusic\\outFile.txt";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         BuildingDownloadLinks();
-
-        ReadLinksAndDownload();
-
+        new ReadLinksAndDownloadThread(OUTPUT_FILE_TXT).start();
     }
 
     /**
@@ -32,17 +29,19 @@ public class Main {
      * куда записывает готовые ссылки на скачивание музыки.
      */
     private static void BuildingDownloadLinks() {
+        String Url;
+        String result;
         try (BufferedReader inFile = new BufferedReader(new FileReader(LINK_SITE_TXT));
-             BufferedWriter outFile = new BufferedWriter(new FileWriter(DOWNLOAD_LINK_TXT))) {
-            String Url;
+             BufferedWriter outFile = new BufferedWriter(new FileWriter(OUTPUT_FILE_TXT))) {
             while ((Url = inFile.readLine()) != null) {
                 URL url = new URL(Url);
-                String result;
                 try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
-                        result = bufferedReader.lines().collect(Collectors.joining("\n"));
+                    result = bufferedReader.lines().collect(Collectors.joining("\n"));
                 }
-                Pattern email_pattern = Pattern.compile("\\s*(?<=data-url\\s?=\\s?\")[^>]*(?=\")");
+
+                Pattern email_pattern = Pattern.compile("\\s*(?<=data-url\\s?=\\s?\")[^>]*\\/*(?=\")");
                 Matcher matcher = email_pattern.matcher(result);
+
                 int i = 0;
                 while (matcher.find() && i < 4) {
                     outFile.write(matcher.group() + "\n");
@@ -51,39 +50,6 @@ public class Main {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Метод, в котором читается файл, содержащий URL адреса для скачивания музыки,
-     * вызывает метод downloadUsingNIO, который осуществляет скачивание музыки по ссылке для скачивания.
-     */
-    private static void ReadLinksAndDownload() {
-        try (BufferedReader musicFile = new BufferedReader(new FileReader(DOWNLOAD_LINK_TXT))) {
-            String music;
-            int count = 0;
-                while ((music = musicFile.readLine()) != null) {
-                    downloadUsingNIO(music, PATH_TO_MUSIC + String.valueOf(count + 1) + ".mp3");
-                    count++;
-                    System.out.println("Скачалось файлов - " + count);
-                }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Метод, который осуществляет скачивание музыки по ссылке для скачивания.
-     *
-     * @param strUrl URL для скачивания музыки
-     * @param file   имя для скачанного файла
-     * @throws IOException исключение
-     */
-    private static void downloadUsingNIO(String strUrl, String file) throws IOException {
-        URL url = new URL(strUrl);
-        try (ReadableByteChannel byteChannel = Channels.newChannel(url.openStream());
-             FileOutputStream stream = new FileOutputStream(file)) {
-             stream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
         }
     }
 }
