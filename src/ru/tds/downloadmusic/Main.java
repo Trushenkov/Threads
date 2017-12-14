@@ -2,12 +2,11 @@ package ru.tds.downloadmusic;
 
 import java.io.*;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 import java.util.stream.Collectors;
 
 /**
- * Класс, в котором реализвано выполнение задачи "Качаем музыку".
+ * Класс, в котором реализовано выполнение задачи "Качаем музыку".
  *
  * @author Трушенков Дмитрий 15ИТ18
  */
@@ -23,10 +22,8 @@ public class Main {
     }
 
     /**
-     * Метод считывает исходный файл inFile.txt, содержащий ссылку на сайт,
-     * откуда нужно скачать музыку.
-     * И используя шаблон регулярных выражений, формирует файл outFile.txt,
-     * куда записывает готовые ссылки на скачивание музыки.
+     * Метод на основе файла inFile.txt, содержащего ссылку на сайт, откуда нужно скачать музыку,
+     * используя шаблон регулярного выражения, формирует текстовый файл outFile.txt, содержащий готовые ссылки на скачивание.
      */
     private static void BuildingDownloadLinks() {
         String Url;
