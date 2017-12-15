@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class Main {
 
     private static final String LINK_SITE_TXT = "src\\ru\\tds\\downloadmusic\\inFile.txt";
+
     private static final String OUTPUT_FILE_TXT = "src\\ru\\tds\\downloadmusic\\outFile.txt";
 
     public static void main(String[] args) throws InterruptedException {
@@ -29,12 +30,14 @@ public class Main {
      * куда записывает готовые ссылки на скачивание музыки.
      */
     private static void BuildingDownloadLinks() {
-        String Url;
-        String result;
+        String Url,  result;
+
         try (BufferedReader inFile = new BufferedReader(new FileReader(LINK_SITE_TXT));
              BufferedWriter outFile = new BufferedWriter(new FileWriter(OUTPUT_FILE_TXT))) {
+
             while ((Url = inFile.readLine()) != null) {
                 URL url = new URL(Url);
+
                 try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
                     result = bufferedReader.lines().collect(Collectors.joining("\n"));
                 }
