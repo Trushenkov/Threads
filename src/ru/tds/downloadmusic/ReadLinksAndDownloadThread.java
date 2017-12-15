@@ -1,12 +1,12 @@
 package ru.tds.downloadmusic;
 
-import java.io.*;
-import java.net.URL;
-import java.nio.channels.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
- * Класс, в котором реализовано скачивание музыки, используя  URL адреса
- * для скачивания музыки из текствого файла outFIle.txt,
+ * Класс, в котором реализовано чтение текстового файла outFIle.txt, содержаещего ссылки
+ * для скачивания музыки, а также создание и запуск потока для скачивания музыки по соответствующей ссылке.
  *
  * @author Трушенков Дмитрий 15ИТ18
  */
@@ -24,36 +24,15 @@ public class ReadLinksAndDownloadThread extends Thread {
     public void run() {
         try (BufferedReader musicFile = new BufferedReader(new FileReader(addressOutputFile))) {
 
-            long beforeDownload = System.currentTimeMillis();
+            String linkForDownload;
 
-            String music;
-            int count = 0;
-
-            while ((music = musicFile.readLine()) != null) {
-                System.out.println("Загрузка " + (count + 1) + " файла началась...");
-                downloadUsingNIO(music, PATH_TO_MUSIC + String.valueOf(count + 1) + ".mp3");
-                count++;
-                long timeDownload = System.currentTimeMillis() - beforeDownload;
-                System.out.println("Загрузка выполнена успешно! Время загрузки : " + (timeDownload / 1000) + " сек.");
-                beforeDownload = System.currentTimeMillis();
+            for (int i = 1; (linkForDownload = musicFile.readLine()) != null; i++) {
+                System.out.println("Загрузка " + i + " файла началась...");
+                DownloadThread downloadThreadThread1 = new DownloadThread(linkForDownload, PATH_TO_MUSIC + String.valueOf(i) + ".mp3", i);
+                downloadThreadThread1.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Метод, который осуществляет скачивание музыки по ссылке для скачивания.
-     *
-     * @param strUrl URL для скачивания музыки
-     * @param file   имя для скачанного файла
-     * @throws IOException исключение
-     */
-    private static void downloadUsingNIO(String strUrl, String file) throws IOException {
-        URL url = new URL(strUrl);
-        try (ReadableByteChannel byteChannel = Channels.newChannel(url.openStream());
-             FileOutputStream stream = new FileOutputStream(file)) {
-            stream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
         }
     }
 }
