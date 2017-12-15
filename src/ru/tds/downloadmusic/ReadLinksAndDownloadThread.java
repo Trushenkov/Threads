@@ -16,7 +16,7 @@ public class ReadLinksAndDownloadThread extends Thread {
 
     private static final String PATH_TO_MUSIC = "src\\ru\\tds\\downloadmusic\\music\\music";
 
-    ReadLinksAndDownloadThread(final String addressOutputFile) {
+    ReadLinksAndDownloadThread(String addressOutputFile) {
         this.addressOutputFile = addressOutputFile;
     }
 
@@ -28,8 +28,8 @@ public class ReadLinksAndDownloadThread extends Thread {
 
             for (int i = 1; (linkForDownload = musicFile.readLine()) != null; i++) {
                 System.out.println("Загрузка " + i + " файла началась...");
-                DownloadThread downloadThreadThread1 = new DownloadThread(linkForDownload, PATH_TO_MUSIC + String.valueOf(i) + ".mp3", i);
-                downloadThreadThread1.start();
+                DownloadThread download = new DownloadThread(linkForDownload, PATH_TO_MUSIC + String.valueOf(i) + ".mp3", i);
+                download.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
