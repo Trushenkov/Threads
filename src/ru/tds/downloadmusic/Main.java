@@ -27,13 +27,13 @@ public class Main {
      * используя шаблон регулярного выражения, формирует текстовый файл outFile.txt, содержащий готовые ссылки на скачивание.
      */
     private static void BuildingDownloadLinks() {
-        String Url,  result;
+        String urlString,  result;
 
         try (BufferedReader inFile = new BufferedReader(new FileReader(LINK_SITE_TXT));
              BufferedWriter outFile = new BufferedWriter(new FileWriter(OUTPUT_FILE_TXT))) {
 
-            while ((Url = inFile.readLine()) != null) {
-                URL url = new URL(Url);
+            while ((urlString = inFile.readLine()) != null) {
+                URL url = new URL(urlString);
 
                 try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
                     result = bufferedReader.lines().collect(Collectors.joining("\n"));
