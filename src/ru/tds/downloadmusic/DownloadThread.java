@@ -11,41 +11,45 @@ import java.nio.channels.*;
  */
 public class DownloadThread extends Thread {
 
-    private int numberOfTrack;
-
     private String downloadLink;
 
-    private String nameOfTrack;
+    private int numberOfTrack;
 
+    private static final String PATH_TO_MUSIC = "src\\ru\\tds\\downloadmusic\\music\\track";
 
-    DownloadThread(String downloadLink, String nameOfTrack, int numberOfTrack) {
+    DownloadThread(String downloadLink, int numberOfTrack) {
         this.downloadLink = downloadLink;
-        this.nameOfTrack = nameOfTrack;
         this.numberOfTrack = numberOfTrack;
     }
 
     @Override
     public void run() {
 
-        long beforeDownload = System.currentTimeMillis();
-
         try {
+
+            long beforeDownload = System.currentTimeMillis();
 
             URL url = new URL(downloadLink);
 
-            try (ReadableByteChannel byteChannel = Channels.newChannel(url.openStream());
-                 FileOutputStream stream = new FileOutputStream(nameOfTrack)) {
+            System.out.println("Загрузка " + numberOfTrack+ " файла началась...");
 
-                stream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
+                try (ReadableByteChannel byteChannel = Channels.newChannel(url.openStream());
+                     FileOutputStream stream = new FileOutputStream(PATH_TO_MUSIC + String.valueOf(numberOfTrack) + ".mp3")) {
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                     stream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             long timeDownload = System.currentTimeMillis() - beforeDownload;
-            System.out.println("Загрузка " + numberOfTrack + " файла выполнена успешно! Время загрузки : " + (timeDownload / 1000) + " сек. Поток - " + getName());
+            System.out.println("Загрузка " + numberOfTrack + " файла выполнена успешно! " +
+                               "Время загрузки : " + (timeDownload / 1000) + " сек. " +
+                               "Поток - " + getName());
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
+
 }
