@@ -2,6 +2,7 @@ package ru.tds.downloadmusic;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.regex.*;
 import java.util.stream.Collectors;
 
@@ -14,42 +15,53 @@ public class Main {
 
     private static final String LINK_SITE_TXT = "src\\ru\\tds\\downloadmusic\\inFile.txt";
 
-    private static final String OUTPUT_FILE_TXT = "src\\ru\\tds\\downloadmusic\\outFile.txt";
+    public static void main(String[] args) throws InterruptedException, IOException {
 
-    public static void main(String[] args) throws InterruptedException {
+        BufferedReader reader = new BufferedReader(new FileReader(LINK_SITE_TXT));
 
-        BuildingDownloadLinks();
-        new ReadLinksAndDownloadThread(OUTPUT_FILE_TXT).start();
+        new DownloadFromArrayList(BuildingArrayList(reader), 10).start();
+
     }
 
     /**
-     * Метод на основе файла inFile.txt, содержащего ссылку на сайт, откуда нужно скачать музыку,
-     * используя шаблон регулярного выражения, формирует текстовый файл outFile.txt, содержащий готовые ссылки на скачивание.
+     * Метод, который в строке с HTML-кодом страницы, используя шаблон регулярного выражения,
+     * находит готовые ссылки на скачивание музыки и записывает их в ArrayList.
+     *
+     * @param reader файл, в котором содержится ссылка на сайт, откуда нужно скачать музыку
+     * @return ArrayList с готовыми ссылками на скачивание музыки
+     * @throws IOException исключение
      */
-    private static void BuildingDownloadLinks() {
-        String urlString,  result;
+    private static ArrayList<String> BuildingArrayList(BufferedReader reader) throws IOException {
 
-        try (BufferedReader inFile = new BufferedReader(new FileReader(LINK_SITE_TXT));
-             BufferedWriter outFile = new BufferedWriter(new FileWriter(OUTPUT_FILE_TXT))) {
+        ArrayList<String> arrayList;
+        arrayList = new ArrayList<>();
 
-            while ((urlString = inFile.readLine()) != null) {
-                URL url = new URL(urlString);
+        Pattern email_pattern = Pattern.compile("\\s*(?<=data-url\\s?=\\s?\")[^>]*\\/*(?=\")");
 
-                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
-                    result = bufferedReader.lines().collect(Collectors.joining("\n"));
-                }
+        Matcher matcher = email_pattern.matcher(parseLink(reader));
 
-                Pattern email_pattern = Pattern.compile("\\s*(?<=data-url\\s?=\\s?\")[^>]*\\/*(?=\")");
-                Matcher matcher = email_pattern.matcher(result);
 
-                int i = 0;
-                while (matcher.find() && i < 4) {
-                    outFile.write(matcher.group() + "\n");
-                    i++;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        while (matcher.find()) {
+            arrayList.add(matcher.group());
         }
+        return arrayList;
+    }
+
+    /**
+     * Метод, который считывает ссылку из файла inFile.txt, и формирует строку с HTML-кодом этой страницы.
+     *
+     * @param reader файл, содержащий ссылку на сайт
+     * @return result строка с HTML-кодом страницы
+     * @throws IOException исключение
+     */
+    private static String parseLink(BufferedReader reader) throws IOException {
+        String urlString, result = null;
+        while ((urlString = reader.readLine()) != null) {
+            URL url = new URL(urlString);
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+                result = bufferedReader.lines().collect(Collectors.joining("\n"));
+            }
+        }
+        return result;
     }
 }
