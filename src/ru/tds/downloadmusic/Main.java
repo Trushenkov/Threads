@@ -28,41 +28,43 @@ public class Main {
      * @return ArrayList с готовыми ссылками на скачивание музыки
      * @throws IOException исключение
      */
-    private static ArrayList<String> BuildingArrayList() throws IOException {
+    private static ArrayList<String> BuildingArrayList() {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(LINK_SITE_TXT))) {
+        ArrayList<String> arrayList = new ArrayList<>();
 
-            ArrayList<String> arrayList  = new ArrayList<>();
-
+        try {
             Pattern email_pattern = Pattern.compile("\\s*(?<=data-url\\s?=\\s?\")[^>]*\\/*(?=\")");
-            Matcher matcher = email_pattern.matcher(parseLink(reader));
+            Matcher matcher = email_pattern.matcher(parseLink());
 
             while (matcher.find()) {
                 arrayList.add(matcher.group());
             }
 
-            return arrayList;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        return arrayList;
     }
 
     /**
      * Метод, который считывает ссылку из файла inFile.txt, и формирует строку с HTML-кодом этой страницы.
      *
-     * @param reader файл, содержащий ссылку на сайт
      * @return result строка с HTML-кодом страницы
      * @throws IOException исключение
      */
-    private static String parseLink(BufferedReader reader) throws IOException {
+    private static String parseLink() throws IOException {
 
         String urlString, result = null;
-
-        while ((urlString = reader.readLine()) != null) {
-            URL url = new URL(urlString);
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
-                result = bufferedReader.lines().collect(Collectors.joining("\n"));
+        try (BufferedReader reader = new BufferedReader(new FileReader(LINK_SITE_TXT))) {
+            while ((urlString = reader.readLine()) != null) {
+                URL url = new URL(urlString);
+                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+                    result = bufferedReader.lines().collect(Collectors.joining("\n"));
+                }
             }
-        }
 
+        }
         return result;
     }
 }
