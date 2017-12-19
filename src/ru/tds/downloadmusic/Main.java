@@ -15,9 +15,9 @@ public class Main {
 
     private static final String LINK_SITE_TXT = "src\\ru\\tds\\downloadmusic\\inFile.txt";
 
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) {
 
-        new DownloadFromArrayList(BuildingArrayList(), 10).start();
+        new DownloadFromArrayList(BuildingArrayList(), 15).start();
 
     }
 
@@ -26,22 +26,16 @@ public class Main {
      * находит готовые ссылки на скачивание музыки и записывает их в ArrayList.
      *
      * @return ArrayList с готовыми ссылками на скачивание музыки
-     * @throws IOException исключение
      */
     private static ArrayList<String> BuildingArrayList() {
 
         ArrayList<String> arrayList = new ArrayList<>();
 
-        try {
-            Pattern email_pattern = Pattern.compile("\\s*(?<=data-url\\s?=\\s?\")[^>]*\\/*(?=\")");
-            Matcher matcher = email_pattern.matcher(parseLink());
+        Pattern email_pattern = Pattern.compile("\\s*(?<=data-url\\s?=\\s?\")[^>]*\\/*(?=\")");
+        Matcher matcher = email_pattern.matcher(parseLink());
 
-            while (matcher.find()) {
-                arrayList.add(matcher.group());
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        while (matcher.find()) {
+            arrayList.add(matcher.group());
         }
 
         return arrayList;
@@ -53,7 +47,7 @@ public class Main {
      * @return result строка с HTML-кодом страницы
      * @throws IOException исключение
      */
-    private static String parseLink() throws IOException {
+    private static String parseLink() {
 
         String urlString, result = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(LINK_SITE_TXT))) {
@@ -63,7 +57,8 @@ public class Main {
                     result = bufferedReader.lines().collect(Collectors.joining("\n"));
                 }
             }
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return result;
     }
