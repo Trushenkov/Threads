@@ -17,9 +17,7 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
-        BufferedReader reader = new BufferedReader(new FileReader(LINK_SITE_TXT));
-
-        new DownloadFromArrayList(BuildingArrayList(reader), 10).start();
+        new DownloadFromArrayList(BuildingArrayList(), 10).start();
 
     }
 
@@ -27,24 +25,24 @@ public class Main {
      * Метод, который в строке с HTML-кодом страницы, используя шаблон регулярного выражения,
      * находит готовые ссылки на скачивание музыки и записывает их в ArrayList.
      *
-     * @param reader файл, в котором содержится ссылка на сайт, откуда нужно скачать музыку
      * @return ArrayList с готовыми ссылками на скачивание музыки
      * @throws IOException исключение
      */
-    private static ArrayList<String> BuildingArrayList(BufferedReader reader) throws IOException {
+    private static ArrayList<String> BuildingArrayList() throws IOException {
 
-        ArrayList<String> arrayList;
-        arrayList = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(LINK_SITE_TXT))) {
 
-        Pattern email_pattern = Pattern.compile("\\s*(?<=data-url\\s?=\\s?\")[^>]*\\/*(?=\")");
+            ArrayList<String> arrayList  = new ArrayList<>();
 
-        Matcher matcher = email_pattern.matcher(parseLink(reader));
+            Pattern email_pattern = Pattern.compile("\\s*(?<=data-url\\s?=\\s?\")[^>]*\\/*(?=\")");
+            Matcher matcher = email_pattern.matcher(parseLink(reader));
 
+            while (matcher.find()) {
+                arrayList.add(matcher.group());
+            }
 
-        while (matcher.find()) {
-            arrayList.add(matcher.group());
+            return arrayList;
         }
-        return arrayList;
     }
 
     /**
@@ -55,13 +53,16 @@ public class Main {
      * @throws IOException исключение
      */
     private static String parseLink(BufferedReader reader) throws IOException {
+
         String urlString, result = null;
+
         while ((urlString = reader.readLine()) != null) {
             URL url = new URL(urlString);
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
                 result = bufferedReader.lines().collect(Collectors.joining("\n"));
             }
         }
+
         return result;
     }
 }
