@@ -22,8 +22,8 @@
 1. Cчитывание ссылки из файла inFile.txt, и формирование строки с HTML-кодом этой страницы.
 2. Поиск в этой строке ссылок для скачивания музыки, в соответствии с шаблоном регулярного выражения.
 3. Запись найденных ссылок в ArrayList<String> arraylist.
-4. Скачивание музыки с сайта https://zvonko.me/, используя arrayList с готовыми ссылками на скачивание.<br>
-5. Загрузка файла происходит с помощью Downloader, который находится в отдельном пакете. 
+4. Скачивание музыки с сайта https://zvonko.me/, используя arrayList с готовыми ссылками на скачивание.
+5. Загрузка файла происходит с помощью Downloader, который находится в отдельном пакете. <br>
 <a href="https://github.com/Trushenkov/Threads/tree/master/src/ru/tds/downloadmusic"> Качаем музыку </a>
 
 ## Downloadimages ##
@@ -32,9 +32,11 @@
 2. Создание потоков класса Downloader для скачивания картинки, используя DownloderBuider.
 3. Запуск потоков для скачивания картинки по соответсвтвующей ссылке.
 4. Вывод результата работы программы, содержащего информацию о времени загрузке картинки.
-5. Загрузка файла происходит с помощью Downloader, который находится в отдельном пакете. 
+5. Загрузка файла происходит с помощью Downloader, который находится в отдельном пакете. <br>
+<a href="https://github.com/Trushenkov/Threads/tree/master/src/ru/tds/downloadimages">Качаем картинки</a>
 
 ## Downloader ## 
 Содержит: 
 1. Класс Downloader для загрузки файла по ссылке на скачивание.
-2. Класс DownloaderBuilder - Паттерн-Builder для создания объекта класса Downloader.
+2. Класс DownloaderBuilder - Паттерн-Builder для создания объекта класса Downloader. <br>
+<a href="https://github.com/Trushenkov/Threads/tree/master/src/ru/tds/downloader"> Загрузчик</a>
