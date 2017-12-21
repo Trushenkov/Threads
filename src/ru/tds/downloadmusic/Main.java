@@ -1,5 +1,8 @@
 package ru.tds.downloadmusic;
 
+import ru.tds.downloader.Downloader;
+import ru.tds.downloader.DownloaderBuilder;
+
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,9 +18,35 @@ public class Main {
 
     private static final String LINK_SITE_TXT = "src\\ru\\tds\\downloadmusic\\inFile.txt";
 
+    private static final String PATH_TO_FILE = "src\\ru\\tds\\downloadmusic\\music\\track";
+
     public static void main(String[] args) {
 
-        new DownloadFromArrayList(BuildingArrayList(), 15).start();
+        StartDownload(BuildingArrayList(), 10);
+
+    }
+
+    /**
+     * Метод для создания и запуска потоков для загрузки музыки по соответствующей ссылке из ArrayList'a.
+     *
+     * @param arrayList ArrayList, заполненный ссылками для скачивания музыки
+     * @param countOfDownloads количество треков, которое нужно загрузить
+     */
+    private static void StartDownload(ArrayList<String> arrayList, int countOfDownloads) {
+
+        String link;
+
+        for (int i = 0; (link = arrayList.get(i)) != null && i < countOfDownloads; i++) {
+
+            Downloader downloadThread = new DownloaderBuilder()
+                                        .downloadLink(link)
+                                        .pathToFile(PATH_TO_FILE)
+                                        .format(".mp3")
+                                        .number(i+1)
+                                        .build();
+            downloadThread.start();
+
+        }
 
     }
 
@@ -44,8 +73,7 @@ public class Main {
     /**
      * Метод, который считывает ссылку из файла inFile.txt, и формирует строку с HTML-кодом этой страницы.
      *
-     * @return result строка с HTML-кодом страницы
-     * @throws IOException исключение
+     * @return result строка с HTML-кодом страницы.
      */
     private static String parseLink() {
 
