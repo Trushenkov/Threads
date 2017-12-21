@@ -1,14 +1,11 @@
 package ru.tds.downloader;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
+import java.io.*;
+import java.net.*;
+import java.nio.channels.*;
 
 /**
- * Класс для загрузки картинки по URL ссылке.
+ * Класс для загрузки файла по ссылке.
  *
  * @author Трушенков Дмитрий 15ИТ18
  */
