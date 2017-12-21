@@ -1,7 +1,6 @@
 package ru.tds.downloadmusic;
 
-import ru.tds.downloader.Downloader;
-import ru.tds.downloader.DownloaderBuilder;
+import ru.tds.downloader.*;
 
 import java.io.*;
 import java.net.URL;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class Main {
 
-    private static final String LINK_SITE_TXT = "src\\ru\\tds\\downloadmusic\\inFile.txt";
+    private static final String SOURCE_FILE = "src\\ru\\tds\\downloadmusic\\inFile.txt";
 
     private static final String PATH_TO_FILE = "src\\ru\\tds\\downloadmusic\\music\\track";
 
@@ -78,7 +77,7 @@ public class Main {
     private static String parseLink() {
 
         String urlString, result = null;
-        try (BufferedReader reader = new BufferedReader(new FileReader(LINK_SITE_TXT))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(SOURCE_FILE))) {
             while ((urlString = reader.readLine()) != null) {
                 URL url = new URL(urlString);
                 try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
